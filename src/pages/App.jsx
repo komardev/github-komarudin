@@ -25,6 +25,8 @@ const App = () => {
 
   const searchAcc = async () => {
     try {
+      if (!search) return alert('Username is empty!')
+      setTotalCard(4)
       setLoad(true)
       let getUser = await axios.get(`/${search}?client_id=${clientId}`)
       let getRepos = await axios.get(`/${getUser.data.login}/repos`)
@@ -42,7 +44,7 @@ const App = () => {
 
 
   const rendRepos = (data) => {
-    if (data) {
+    if (data.length) {
       return data.slice(0, totalCard).map((item, index) => {
         return (
           <div onClick={() => window.open(item.clone_url)} key={index} className="card  ">
@@ -54,6 +56,12 @@ const App = () => {
           </div>
         )
       })
+    } else {
+      return (
+        <div className="card">
+          <h4>Repositories not found!</h4>
+        </div>
+      )
     }
   }
 
@@ -101,11 +109,13 @@ const App = () => {
             <div className="">
               {rendRepos(repos)}
             </div>
-            <div className="repos__button">
-              <button onClick={() => changeCard()}>
-                {totalCard >= repos.length ? 'Less More' : 'See More'}
-              </button>
-            </div>
+            {repos.length >= 4 && (
+              <div className="repos__button">
+                <button onClick={() => changeCard()}>
+                  {totalCard >= repos.length ? 'Less More' : 'See More'}
+                </button>
+              </div>
+            )}
           </div>
         </>
       )}
