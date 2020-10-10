@@ -1,9 +1,12 @@
 import React from 'react'
+import axios from 'axios'
+import { Header } from '../components'
+
 
 const App = () => {
   return (
     <div>
-      <h1>Hello World</h1>
+      <Header />
     </div>
   )
 }
