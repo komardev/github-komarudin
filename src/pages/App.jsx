@@ -18,6 +18,7 @@ const App = () => {
   const [totalCard, setTotalCard] = useState(4)
   const [load, setLoad] = useState(false)
 
+
   useEffect(() => {
     searchAcc()
   }, [])
@@ -31,7 +32,11 @@ const App = () => {
       setRepos(getRepos.data)
       setLoad(false)
     } catch (error) {
-      console.log(error.response.status);
+      setLoad(false)
+      if (error.response.status === 404) {
+        alert(`Sorry user with username ${search} not found!`)
+      }
+      console.log(error);
     }
   }
 
@@ -64,37 +69,46 @@ const App = () => {
     <div>
       <Header />
       {/* Searchbar */}
-      <div className="search">
-        <div className="search__input">
-          <input onChange={(e) => { setSearch(e.target.value) }} value={search} type="text" placeholder="Enter a Github username..." />
-          <i onClick={() => searchAcc()} className="fa fa-search"></i>
+      {load && (
+        <div className="loadbar">
+          <img width="130" src={require('../assets/gif/load.gif')} alt="" />
         </div>
-      </div>
+      )}
+      {!load && (
+        <>
+          <div className="search">
+            <div className="search__input">
+              <input onChange={(e) => { setSearch(e.target.value) }} value={search} type="text" placeholder="Enter a Github username..." />
+              <i onClick={() => searchAcc()} className="fa fa-search"></i>
+            </div>
+          </div>
 
-      {/* Main Content */}
-      <div onClick={() => window.open(userAcc.html_url)} className="main">
-        <img className="main__image" src={userAcc.avatar_url} alt="" />
-        <div className="info">
-          <h3 className="info__name">{userAcc.name}</h3>
-          <h3 className="info__username">@{userAcc.login}</h3>
-          {userAcc.location && (<h5 className="info__location"><i className="fa fa-map-marker" aria-hidden="true"></i> {userAcc.location}</h5>)}
-          <small className="info__icon"><i className="fa fa-folder-o" aria-hidden="true"></i> {userAcc.public_repos} Repos</small>
-          <small className="info__icon"><i className="fa fa-user-o" aria-hidden="true"></i> {userAcc.followers} Followers</small>
-        </div>
-      </div>
+          {/* Main Content */}
+          <div onClick={() => window.open(userAcc.html_url)} className="main">
+            <img className="main__image" src={userAcc.avatar_url} alt="" />
+            <div className="info">
+              <h3 className="info__name">{userAcc.name}</h3>
+              <h3 className="info__username">@{userAcc.login}</h3>
+              {userAcc.location && (<h5 className="info__location"><i className="fa fa-map-marker" aria-hidden="true"></i> {userAcc.location}</h5>)}
+              <small className="info__icon"><i className="fa fa-folder-o" aria-hidden="true"></i> {userAcc.public_repos} Repos</small>
+              <small className="info__icon"><i className="fa fa-user-o" aria-hidden="true"></i> {userAcc.followers} Followers</small>
+            </div>
+          </div>
 
-      {/* Main Repository */}
-      <div className="repos">
-        <h2>Repositories</h2>
-        <div className="">
-          {rendRepos(repos)}
-        </div>
-        <div className="repos__button">
-          <button onClick={() => changeCard()}>
-            {totalCard >= repos.length ? 'Less More' : 'See More'}
-          </button>
-        </div>
-      </div>
+          {/* Main Repository */}
+          <div className="repos">
+            <h2>Repositories</h2>
+            <div className="">
+              {rendRepos(repos)}
+            </div>
+            <div className="repos__button">
+              <button onClick={() => changeCard()}>
+                {totalCard >= repos.length ? 'Less More' : 'See More'}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 

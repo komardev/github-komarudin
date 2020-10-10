@@ -27,6 +27,15 @@
     }
 }
 
+.loadbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+
+
+}
+
 .main {
     margin-top: 30px;
     display: flex;
